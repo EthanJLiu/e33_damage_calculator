@@ -8,7 +8,6 @@ class App(tk.Tk):
         self.title("Character Selection")
         self.geometry("600x600")
         
-        
         self.nav_bar = NavigationBar(self)
 
         #set character select
@@ -43,7 +42,7 @@ class CharacterSelection(tk.Frame):
 
             btn = tk.Button(self, image = img, text = char["name"])
             btn.image = img #prevents image garbage collecting
-            btn.grid(row = 1, column= index, padx = 10)
+            btn.grid(row = 1, column= index, ipadx = 10, padx = 10)
         
         self.grid(row = 2, pady = (0,20))
 App()
