@@ -3,7 +3,7 @@ import Character
     
 class Weapon():
     
-    DEFAULT_ILVL = 1
+    DEFAULT_ILVL = 15
 
     WHITE = (.508, 1, "D", "C")
     LVL3_TO_4 = (.327, 3, "D", "C")
@@ -29,7 +29,14 @@ class Weapon():
         #initialize each level's corresponding base damage values 
         self.atk_levels = []
         self.get_atk_from_ilvl() #initializes all the attack values from ilvl
+
+        #final damage calculation
         self.base_dmg = self.atk_levels[self.DEFAULT_ILVL-1]
+        self.atk_from_char_level = self.get_atk_from_char_lvl()
+        self.flat_might_inc = self.calc_might_scaling(self.owner.get_might())[0]
+        self.percent_might_inc = self.calc_might_scaling(self.owner.get_might())[1]
+
+        self.final_dmg = self.atk_from_char_level + (self.base_dmg * self.percent_might_inc) + self.flat_might_inc + self.calc_attribute_scaling()[0] + self.calc_attribute_scaling()[1]
         
         
         #self.base_dmg = self.calc_might_scaling(99, 1)
@@ -69,11 +76,10 @@ class Weapon():
             self.atk_levels.append(math.ceil(power))
 
     def get_atk_from_char_lvl(self):
-        character = Character.Player_Character()
-        atk_from_char_lvl = math.trunc(15 + 13.6 * (character.get_lvl()-1))
+        atk_from_char_lvl = math.trunc(15 + 13.6 * (self.owner.get_lvl()-1))
         return atk_from_char_lvl
 
-    def calc_might_scaling(self, num_might, curr_lvl):  
+    def calc_might_scaling(self, num_might):  
         with open("might.txt", 'r') as f:
             lvl_bonuses = {}
             lines = f.readlines()
@@ -86,12 +92,9 @@ class Weapon():
         for i in range(1, num_might):
             flat_inc += lvl_bonuses[i]
 
-        percent_inc = 1+0.005*num_might
+        percent_inc = 1+(0.005*num_might)
 
-        # inherent_bonus = self.get_atk_from_char_lvl()
-        # dmg_from_ilvl = self.atk_levels[curr_lvl-1]
-        # base_dmg = (dmg_from_ilvl*percent_inc) + (inherent_bonus+flat_inc)
-        return flat_inc, math.ceil(percent_inc)
+        return flat_inc, percent_inc
 
     def change_lvl(self, direction):
         old_range = self.get_current_range(self.level)
@@ -140,12 +143,16 @@ class Weapon():
 scaverim = Weapon(attributes = ("agility", "vitality"), ilvl1_power= 59)
 print ("Scaverim:" + str(scaverim.atk_levels))
 print ("Scaverim:" + str(scaverim.base_dmg))
-scaverim.change_lvl("DOWN")
-scaverim.change_lvl("DOWN")
-scaverim.change_lvl("DOWN")
+
 print(str(scaverim.level))
 print(str(scaverim.attribute_affinities))
-# print ("Scaverim:" + str(scaverim.base_dmg))
+
+
+print ("Scaverim:" + str(scaverim.percent_might_inc))
+print ("Scaverim:" + str(scaverim.flat_might_inc))
+print ("Scaverim:" + str(scaverim.atk_from_char_level))
+
+print ("Scaverim:" + str(scaverim.final_dmg))
 
 # lunerim = Weapon(stats = ("vitality", "agility"), ilvl1_grades = ("S", "A"), ilvl1_power= 34)
 # print ("Lunerim:" + str(lunerim.base_dmg))
