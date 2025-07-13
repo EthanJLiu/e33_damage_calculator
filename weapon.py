@@ -3,6 +3,8 @@ import Character
     
 class Weapon():
     
+    MIN_ILVL = 1
+    MAX_ILVL = 33
     DEFAULT_ILVL = 15
 
     WHITE = (.508, 1, "D", "C")
@@ -17,9 +19,9 @@ class Weapon():
     GRADE_MULIPLIERS = {"S" : 0.01004, "A" : 0.00632, "B": 0.00365, "C" : 0.001838, "D" : 0.0008345}
 
     def __init__(self, attributes, ilvl1_power, owner = Character.Player_Character()):
-        self.owner = owner #The character the weapon belongs to
-        self.ilvl1_power = ilvl1_power #the starting power for an item level 1 weapon
-        self.level = self.DEFAULT_ILVL #the default item level when a weapon is selected]
+        self.owner = owner 
+        self.ilvl1_power = ilvl1_power
+        self.level = self.DEFAULT_ILVL 
         
         #Initialize current scaling range and attribute affinities
         self.attributes = attributes
@@ -30,16 +32,18 @@ class Weapon():
         self.atk_levels = []
         self.get_atk_from_ilvl() #initializes all the attack values from ilvl
 
-        #final damage calculation
-        self.base_dmg = self.atk_levels[self.DEFAULT_ILVL-1]
-        self.atk_from_char_level = self.get_atk_from_char_lvl()
-        self.flat_might_inc = self.calc_might_scaling(self.owner.get_might())[0]
-        self.percent_might_inc = self.calc_might_scaling(self.owner.get_might())[1]
+        self.final_dmg = self.calc_final_dmg()
 
-        self.final_dmg = self.atk_from_char_level + (self.base_dmg * self.percent_might_inc) + self.flat_might_inc + self.calc_attribute_scaling()[0] + self.calc_attribute_scaling()[1]
-        
-        
-        #self.base_dmg = self.calc_might_scaling(99, 1)
+    def calc_final_dmg(self):
+        base_dmg = self.atk_levels[self.level-1]
+        atk_from_char_level = self.get_atk_from_char_lvl()
+        flat_might_inc = self.calc_might_scaling(self.owner.get_might())[0]
+        percent_might_inc = self.calc_might_scaling(self.owner.get_might())[1]
+
+        return atk_from_char_level + (base_dmg * percent_might_inc) + flat_might_inc + self.calc_attribute_scaling()[0] + self.calc_attribute_scaling()[1]
+    
+    def update_final_dmg(self):
+        self.final_dmg = self.calc_final_dmg()
 
     #Returns the percent increase corresponding to the different level ranges, which have varied scaling and grades
     def get_current_range(self, level):
@@ -102,25 +106,19 @@ class Weapon():
             return
         if self.level == 1 and direction == "DOWN":
             return
+        
         self.level += 1 if direction == "UP" else -1
         new_range = self.get_current_range(self.level)
         self.base_dmg = self.atk_levels[self.level]
 
         if new_range != old_range:
             self.attribute_affinities = {self.attributes[0]:new_range[2], self.attributes[1]:new_range[3]}
+        
+        self.update_final_dmg()
 
     def calc_attribute_scaling(self):
-        base = None
-        if self.get_current_range(self.level) == self.WHITE or self.get_current_range(self.level) == self.LVL3_TO_4:
-            base = self.atk_levels[0]
-        elif self.get_current_range(self.level) == self.BLUE or self.get_current_range(self.level) == self.LVL9_TO_10:
-            base = self.atk_levels[3]
-        elif self.get_current_range(self.level) == self.PURPLE or self.get_current_range(self.level) == self.LVL19_TO_20:
-            base = self.atk_levels[9]
-        elif self.get_current_range(self.level) == self.YELLOW:
-            base = self.atk_levels[19]
-        else:
-            base = self.atk_levels[32]
+        base = self.atk_levels[self.level-1]
+        
 
         lower_attribute = self.attributes[0]
         
@@ -134,32 +132,51 @@ class Weapon():
 
         return power_from_higher, power_from_lower
 
+# scaverim = Weapon(attributes = ("agility", "vitality"), ilvl1_power= 59)
+# print ("Scaverim:" + str(scaverim.atk_levels[scaverim.level-1]))
+
+
+# print(str(scaverim.level))
+# print(str(scaverim.attribute_affinities))
+# print(scaverim.get_atk_from_ilvl())
+# print ("Scaverim:" + str(scaverim.final_dmg))
+
+
+# elerim = Weapon(attributes = ("defense", "vitality"), ilvl1_power = 50)
+# print(elerim.attribute_affinities)
+# print(elerim.get_atk_from_char_lvl())
+# print ("Elerim:" + str(elerim.final_dmg))
+# print(elerim.atk_levels)
+
+class Scaverim(Weapon):
+    ILVL1_POWER = 59
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = "agility"
+
+    def __init__(self):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER)
+        self.element = "dark"
+        self.num_dark_stains = 0
+
+    def get_dmg_from_wpn_skill(self):
+        bonus = 0
+        if self.num_dark_stains == 4:
+            bonus = 6
+        else:
+            bonus = 1 + 0.5 * self.num_dark_stains
+        return bonus
+
+class Kralim(Weapon):
+    ILVL1_POWER = 48
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "vitality"
+    def __init__(self):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER)
+    
+
 
         
 
-# kralim = Weapon(stats = ("vitality", "agility"), ilvl1_grades = ("S", "A"), ilvl1_power= 48)
-# print ("Kralim:" + str(kralim.base_dmg))
-
-scaverim = Weapon(attributes = ("agility", "vitality"), ilvl1_power= 59)
-print ("Scaverim:" + str(scaverim.atk_levels))
-print ("Scaverim:" + str(scaverim.base_dmg))
-
-print(str(scaverim.level))
-print(str(scaverim.attribute_affinities))
-
-
-print ("Scaverim:" + str(scaverim.percent_might_inc))
-print ("Scaverim:" + str(scaverim.flat_might_inc))
-print ("Scaverim:" + str(scaverim.atk_from_char_level))
-
-print ("Scaverim:" + str(scaverim.final_dmg))
-
-# lunerim = Weapon(stats = ("vitality", "agility"), ilvl1_grades = ("S", "A"), ilvl1_power= 34)
-# print ("Lunerim:" + str(lunerim.base_dmg))
-
-# medalum = Weapon(stats = ("vitality", "agility"), ilvl1_grades = ("S", "A"), ilvl1_power= 41)
-# print ("medalum:" + str(medalum.base_dmg))
-
-# simoso = Weapon(stats = ("vitality", "agility"), ilvl1_grades = ("S", "A"), ilvl1_power= 45)
-# print ("simoso:" + str(simoso.atk_levels))
-
+scaverim = Scaverim()
+print(scaverim.final_dmg)
+    
