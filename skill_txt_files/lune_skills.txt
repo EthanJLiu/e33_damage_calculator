@@ -1,0 +1,21 @@
+Crippling Tsunami	12.5	2.5	2.5	1	5
+Crustal  Crush	13.5	4.5	0.9	5	3
+Earth Rising	1.8	1.2	1.2	1	1.5	
+Electrify	1.2	1.2	0.2	6	1
+Elemental Genesis	24	24	3	8	1
+Elemental Trick	1.2	1.2	0.3	4	1		
+Fire Rage	5	2.5	2.5	1	2						
+Hell	30	10	5	2	3		
+Ice Lance	2.1	1.4	1.4	1	1.5	
+Immolation	1.05	0.7	0.7	1	1.5						
+Lightning Dance	36	7.2	0.6	12	5
+Mayhem	12	2.4	0.6	4	5		
+Rock Slide	12.5	2.5	1.25	2	5
+Storm Caller	0.6	0.6	0.6	1	1
+Terraquake	1.5	1.5	1.5	1	1
+Thermal Transfer	1	1	0.5	2	1	
+Thunderfall	5.4	3.6	0.3	12	1.5
+Typhoon	2.5	2.5	2.5	1	1
+Wildfire	2.5	1.25	1.25	1	2
+Tremor	5	5	5	1	1
+Sky Break	40	40	40	1	1

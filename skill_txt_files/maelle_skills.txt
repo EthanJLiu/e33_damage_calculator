@@ -1,0 +1,21 @@
+Breaking Rules	1.5	1.5	0.75	2	1
+Combustion	8	1.6	0.8	2	5
+Degagement	1	1	1	1	1		
+Fencer's Flurry	1.4	1.4	1.4	1	1
+Fleuret Fury	2.4	2.4	0.8	3	1		
+Momentum Strike	7	3.5	3.5	1	2
+Offensive Switch	1	1	1	1	1
+Payback	5	5	5	1	1
+Percee	4.4	2.2	2.2	1	2
+Pyrolyse	5.0001	5.0001	1.6667	3	1
+Rain of Fire	1.6	1.6	0.8	2	1
+Revenge	6.6	1.2	1.2	1	5.5
+Spark	1	1	1	1	1
+Swift Stride	1	1	1	1	1
+Sword Ballet	7.5	3.75	0.75	5	2
+Burning Canvas	22.4	2	0.4	5	11.2
+Phantom Strike	2.8	2.8	0.7	4	1
+Stendhal	15	15	15	1	1
+Gustave's Homage	6.75	4.5	0.5	9	1.5
+Virtuose Strike	1.5	1.5	0.3	5	1
+Gommage	50	50	50	1	1

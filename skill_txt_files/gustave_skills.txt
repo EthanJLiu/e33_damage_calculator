@@ -1,0 +1,6 @@
+From Fire	1.875	1.875	0.625	3	1
+Lumiere Assault	1.25	1.25	0.25	5	1
+Marking Shot	1	1	1	1	1
+Overcharge	4.5	1.5	1	1.5	3	
+Shatter	1.75	1.75	1.75	1	1
+Strike Storm	4.9	4.9	0.7	7	1
