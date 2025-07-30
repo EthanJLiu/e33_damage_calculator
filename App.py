@@ -48,29 +48,47 @@ def parse_skills_from_txt(text):
     return skill_dictionary
 
 LUNE_WEAPONS = [wpn.Angerim, wpn.Benisim, wpn.Betalim, wpn.Braselim, 
-            wpn.Chapelim, wpn.Choralim, wpn.Colim, wpn.Coralim,
-            wpn.Deminerim, wpn.Elerim, wpn.Kralim, wpn.Lighterim,
-            wpn.Lithelim, wpn.Lunerim, wpn.Painerim, wpn.Potierim,
-            wpn.Redalim, wpn.Saperim, wpn.Scaverim, wpn.Snowim,
-            wpn.Trebuchim, wpn.Troubadim]
+                wpn.Chapelim, wpn.Choralim, wpn.Colim, wpn.Coralim,
+                wpn.Deminerim, wpn.Elerim, wpn.Kralim, wpn.Lighterim,
+                wpn.Lithelim, wpn.Lunerim, wpn.Painerim, wpn.Potierim,
+                wpn.Redalim, wpn.Saperim, wpn.Scaverim, wpn.Snowim,
+                wpn.Trebuchim, wpn.Troubadim]
 LUNE_SKILLS = parse_skills_from_txt("skill_txt_files/lune_skills.txt")
 
-VERSO_WEAPONS = {}
+VERSO_AND_GUSTAVE_WEAPONS = [wpn.Abysseram, wpn.Blodam, wpn.Chevalem, wpn.Confuso, 
+                 wpn.Contorso, wpn.Corpeso, wpn.Cruleram, wpn.Cultam, 
+                 wpn.Danseso, wpn.Delaram, wpn.Demonam, wpn.Dreameso, 
+                 wpn.Dualiso, wpn.Gaulteram, wpn.Gesam, wpn.Glaceso, 
+                 wpn.Lanceram, wpn.Liteso, wpn.Noahram, wpn.Nosaram, 
+                 wpn.Sakaram, wpn.Seeram, wpn.Simoso, wpn.Sireso, 
+                 wpn.Tireso, wpn.Verleso]
 VERSO_SKILLS = parse_skills_from_txt("skill_txt_files/verso_skills.txt")
-
-SCIEL_WEAPONS = {}
-SCIEL_SKILLS = parse_skills_from_txt("skill_txt_files/sciel_skills.txt")
-
-MONOCO_WEAPONS = {}
-MONOCO_SKILLS = parse_skills_from_txt("skill_txt_files/monoco_skills.txt")
-
-MAELLE_WEAPONS = {}
-MAELLE_SKILLS =parse_skills_from_txt("skill_txt_files/maelle_skills.txt")
-
-GUSTAVE_WEAPONS = {}
 GUSTAVE_SKILLS = parse_skills_from_txt("skill_txt_files/gustave_skills.txt")
 
-NAME_TO_ITEMS = {"Verso" : VERSO_WEAPONS, "Lune" : LUNE_WEAPONS, "Monoco" : MONOCO_WEAPONS, "Sciel": SCIEL_WEAPONS, "Maelle": MAELLE_WEAPONS, "Gustave" : GUSTAVE_WEAPONS}
+SCIEL_WEAPONS = [wpn.Algueron, wpn.Blizzon, wpn.Bourgelon, wpn.Charnon, 
+                 wpn.Chation, wpn.Corderon, wpn.Direton, wpn.Garganon,
+                 wpn.Gobluson, wpn.Guleson, wpn.Hevason, wpn.Litheson,
+                 wpn.Lusteson, wpn.Martenon, wpn.Minason, wpn.Moisson,
+                 wpn.Ramasson, wpn.Rangeson, wpn.Sadon, wpn.Scieleson,
+                 wpn.Tisseron]
+SCIEL_SKILLS = parse_skills_from_txt("skill_txt_files/sciel_skills.txt")
+
+MONOCO_WEAPONS = [wpn.Ballaro, wpn.Boucharo, wpn.Brumaro, wpn.Chromaro, 
+                  wpn.Fragaro, wpn.Grandaro, wpn.Joyaro, wpn.Monocaro,
+                  wpn.Nusaro, wpn.Sidaro, wpn.Urnaro]
+MONOCO_SKILLS = parse_skills_from_txt("skill_txt_files/monoco_skills.txt")
+
+MAELLE_WEAPONS = [wpn.Barrier_Breaker, wpn.Battlum, wpn.Brulerum, wpn.Chalium, 
+                 wpn.Chantenum, wpn.Clierum, wpn.Coldum, wpn.Duenum,
+                 wpn.Facesum, wpn.Glaisum, wpn.Jarum, wpn.Lithum,
+                 wpn.Maellum, wpn.Medalum, wpn.Melarum, wpn.Plenum,
+                 wpn.Seashelum, wpn.Sekarum, wpn.Stalum, wpn.Tissenum,
+                 wpn.Veremum, wpn.Volesterum, wpn.Yeverum]
+MAELLE_SKILLS = parse_skills_from_txt("skill_txt_files/maelle_skills.txt")
+
+
+
+NAME_TO_ITEMS = {"Verso" : VERSO_AND_GUSTAVE_WEAPONS, "Lune" : LUNE_WEAPONS, "Monoco" : MONOCO_WEAPONS, "Sciel": SCIEL_WEAPONS, "Maelle": MAELLE_WEAPONS, "Gustave" : VERSO_AND_GUSTAVE_WEAPONS}
 NAME_TO_SKILLS = {"Verso" : VERSO_SKILLS, "Lune" : LUNE_SKILLS, "Monoco" : MONOCO_SKILLS, "Sciel": SCIEL_SKILLS, "Maelle": MAELLE_SKILLS, "Gustave" : GUSTAVE_SKILLS}
 
 active_char = None
@@ -123,6 +141,7 @@ class Customization_Screen(tk.Frame):
 
 class Select(tk.Frame):
     def display_stats(self, frame, item = None, skill = None):
+        #set active item and skill
         global active_item
         global active_skill
         if item == None and active_item == None:
@@ -131,15 +150,12 @@ class Select(tk.Frame):
             pass
         else:
             active_item = item
-        #set active item and skill
         
         active_skill = skill
-        print(isinstance(active_skill, sp.Skill))   
         if skill == None:
             character_skills =list(NAME_TO_SKILLS[self.character.get_name()].values())
             default_skill = character_skills[0]
             active_skill = default_skill
-        
 
         if hasattr(self, 'stats') and self.stats.winfo_exists():
             self.stats.destroy()

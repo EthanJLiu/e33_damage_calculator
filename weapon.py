@@ -121,13 +121,16 @@ class Weapon():
         base = self.atk_levels[self.level-1]
         
         lower_attribute = self.attributes[0]
-        
-        lower_grade = self.attribute_affinities[lower_attribute]
+        if lower_attribute != None:
+            lower_grade = self.attribute_affinities[lower_attribute]
 
         higher_attribute = self.attributes[1]
         higher_grade = self.attribute_affinities[higher_attribute]
+        if lower_attribute != None:
+            power_from_lower = self.owner.attribute_levels[lower_attribute] * self.GRADE_MULIPLIERS[lower_grade] * base
+        else:
+            power_from_lower = 0
 
-        power_from_lower = self.owner.attribute_levels[lower_attribute] * self.GRADE_MULIPLIERS[lower_grade] * base
         power_from_higher = self.owner.attribute_levels[higher_attribute] * self.GRADE_MULIPLIERS[higher_grade] * base
 
         return power_from_higher, power_from_lower
@@ -323,7 +326,7 @@ class Troubadim(Weapon):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 #endregion
     
-#region Verso Weapons
+#region Verso/Gustave Weapons
 class Abysseram(Weapon):
     ILVL1_POWER = 45
     HIGH_AFFINITY = "vitality"
@@ -420,117 +423,566 @@ class Dreameso(Weapon):
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
+class Dualiso(Weapon):
+    ILVL1_POWER = 25
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = "defense"
+    ID = "Dualiso"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Gaulteram(Weapon):
+    ILVL1_POWER = 46
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "luck"
+    ID = "Gaulteram"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Gesam(Weapon):
+    ILVL1_POWER = 45
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "vitality"
+    ID = "Gesam"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Glaceso(Weapon):
+    ILVL1_POWER = 41
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "defense"
+    ID = "Glaceso"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Lanceram(Weapon):
+    ILVL1_POWER = 52
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = "agility"
+    ID = "Lanceram"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Liteso(Weapon):
+    ILVL1_POWER = 50
+    HIGH_AFFINITY = "defense"
+    LOW_AFFINITY = "agility"
+    ID = "Liteso"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Noahram(Weapon):
+    ILVL1_POWER = 32
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = None
+    ID = "Noahram"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Nosaram(Weapon):
+    ILVL1_POWER = 50
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "luck"
+    ID = "Nosaram"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Sakaram(Weapon):
+    ILVL1_POWER = 41
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "luck"
+    ID = "Sakaram"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Seeram(Weapon):
+    ILVL1_POWER = 52
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "vitality"
+    ID = "Seeram"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Simoso(Weapon):
+    ILVL1_POWER = 45
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "vitality"
+    ID = "Simoso"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Sireso(Weapon):
+    ILVL1_POWER = 36
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = "agility"
+    ID = "Sireso"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Tireso(Weapon):
+    ILVL1_POWER = 52
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = "defense"
+    ID = "Tireso"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Verleso(Weapon):
+    ILVL1_POWER = 49
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = None
+    ID = "Verleso"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+#endregion
+
+#region Sciel Weapons
+class Algueron(Weapon):
     ILVL1_POWER = 45
     HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = "luck"
+    ID = "Algueron"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Blizzon(Weapon):
+    ILVL1_POWER = 59
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "defense"
+    ID = "Blizzon"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Bourgelon(Weapon):
+    ILVL1_POWER = 44
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "vitality"
+    ID = "Bourgelon"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Charnon(Weapon):
+    ILVL1_POWER = 42
+    HIGH_AFFINITY = "luck"
     LOW_AFFINITY = "defense"
     ID = "Abysseram"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
-    ILVL1_POWER = 45
-    HIGH_AFFINITY = "vitality"
-    LOW_AFFINITY = "defense"
-    ID = "Abysseram"
+class Chation(Weapon):
+    ILVL1_POWER = 50
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "vitality"
+    ID = "Chation"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
-    ILVL1_POWER = 45
-    HIGH_AFFINITY = "vitality"
-    LOW_AFFINITY = "defense"
-    ID = "Abysseram"
+class Corderon(Weapon):
+    ILVL1_POWER = 39
+    HIGH_AFFINITY = "defense"
+    LOW_AFFINITY = "luck"
+    ID = "Corderon"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
-    ILVL1_POWER = 45
-    HIGH_AFFINITY = "vitality"
+class Direton(Weapon):
+    ILVL1_POWER = 57
+    HIGH_AFFINITY = "agility"
     LOW_AFFINITY = "defense"
-    ID = "Abysseram"
+    ID = "Direton"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
-    ILVL1_POWER = 45
+class Garganon(Weapon):
+    ILVL1_POWER = 44
     HIGH_AFFINITY = "vitality"
     LOW_AFFINITY = "defense"
-    ID = "Abysseram"
+    ID = "Garganon"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
-    ILVL1_POWER = 45
-    HIGH_AFFINITY = "vitality"
-    LOW_AFFINITY = "defense"
-    ID = "Abysseram"
+class Gobluson(Weapon):
+    ILVL1_POWER = 47
+    HIGH_AFFINITY = "defense"
+    LOW_AFFINITY = "agility"
+    ID = "Gobluson"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
-    ILVL1_POWER = 45
-    HIGH_AFFINITY = "vitality"
-    LOW_AFFINITY = "defense"
-    ID = "Abysseram"
+class Guleson(Weapon):
+    ILVL1_POWER = 44
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "agility"
+    ID = "Guleson"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
-    ILVL1_POWER = 45
+class Hevason(Weapon):
+    ILVL1_POWER = 49
     HIGH_AFFINITY = "vitality"
     LOW_AFFINITY = "defense"
-    ID = "Abysseram"
+    ID = "Hevason"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
-    ILVL1_POWER = 45
-    HIGH_AFFINITY = "vitality"
-    LOW_AFFINITY = "defense"
-    ID = "Abysseram"
+class Litheson(Weapon):
+    ILVL1_POWER = 40
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "agility"
+    ID = "Litheson"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
-    ILVL1_POWER = 45
+class Lusteson(Weapon):
+    ILVL1_POWER = 48
     HIGH_AFFINITY = "vitality"
-    LOW_AFFINITY = "defense"
-    ID = "Abysseram"
+    LOW_AFFINITY = "agility"
+    ID = "Lusteson"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
-    ILVL1_POWER = 45
+class Martenon(Weapon):
+    ILVL1_POWER = 54
     HIGH_AFFINITY = "vitality"
-    LOW_AFFINITY = "defense"
-    ID = "Abysseram"
+    LOW_AFFINITY = "agility"
+    ID = "Martenon"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
-    ILVL1_POWER = 45
-    HIGH_AFFINITY = "vitality"
-    LOW_AFFINITY = "defense"
-    ID = "Abysseram"
+class Minason(Weapon):
+    ILVL1_POWER = 40
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "vitality"
+    ID = "Minason"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
-    ILVL1_POWER = 45
-    HIGH_AFFINITY = "vitality"
-    LOW_AFFINITY = "defense"
-    ID = "Abysseram"
+class Moisson(Weapon):
+    ILVL1_POWER = 47
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "luck"
+    ID = "Moisson"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
-class Abysseram(Weapon):
-    ILVL1_POWER = 45
-    HIGH_AFFINITY = "vitality"
-    LOW_AFFINITY = "defense"
-    ID = "Abysseram"
+class Ramasson(Weapon):
+    ILVL1_POWER = 50
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "vitality"
+    ID = "Ramasson"
     def __init__(self, character):
         super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
+class Rangeson(Weapon):
+    ILVL1_POWER = 44
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "defense"
+    ID = "Rangeson"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Sadon(Weapon):
+    ILVL1_POWER = 36
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "defense"
+    ID = "Sadon"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Scieleson(Weapon):
+    ILVL1_POWER = 49
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "luck"
+    ID = "Scieleson"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Tisseron(Weapon):
+    ILVL1_POWER = 43
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "defense"
+    ID = "Tisseron"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+
+#endregion
+
+#region Monoco Weapons
+class Ballaro(Weapon):
+    ILVL1_POWER = 43
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "defense"
+    ID = "Ballaro"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Boucharo(Weapon):
+    ILVL1_POWER = 45
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "agility"
+    ID = "Boucharo"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Brumaro(Weapon):
+    ILVL1_POWER = 48
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = "agility"
+    ID = "Brumaro"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Chromaro(Weapon):
+    ILVL1_POWER = 48
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "defense"
+    ID = "Chromaro"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Fragaro(Weapon):
+    ILVL1_POWER = 59
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "defense"
+    ID = "Fragaro"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Grandaro(Weapon):
+    ILVL1_POWER = 50
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = "defense"
+    ID = "Grandaro"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Joyaro(Weapon):
+    ILVL1_POWER = 52
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "defense"
+    ID = "Joyaro"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Monocaro(Weapon):
+    ILVL1_POWER = 39
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "luck"
+    ID = "Monocaro"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Nusaro(Weapon):
+    ILVL1_POWER = 59
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "vitality"
+    ID = "Nusaro"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Sidaro(Weapon):
+    ILVL1_POWER = 43
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "might"
+    ID = "Sidaro"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Urnaro(Weapon):
+    ILVL1_POWER = 48
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = "luck"
+    ID = "Urnaro"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+#endregion
+
+#region Maelle Weapons
+class Barrier_Breaker(Weapon):
+    ILVL1_POWER = 51
+    HIGH_AFFINITY = "defense"
+    LOW_AFFINITY = "agility"
+    ID = "Barrier Breaker"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Battlum(Weapon):
+    ILVL1_POWER = 43
+    HIGH_AFFINITY = "defense"
+    LOW_AFFINITY = "luck"
+    ID = "Battlum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Brulerum(Weapon):
+    ILVL1_POWER = 39
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "agility"
+    ID = "Brulerum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Chalium(Weapon):
+    ILVL1_POWER = 48
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "vitality"
+    ID = "Chalium"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Chantenum(Weapon):
+    ILVL1_POWER = 40
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "agility"
+    ID = "Chantenum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Clierum(Weapon):
+    ILVL1_POWER = 45
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "defense"
+    ID = "Clierum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Coldum(Weapon):
+    ILVL1_POWER = 36
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = "defense"
+    ID = "Coldum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Duenum(Weapon):
+    ILVL1_POWER = 34
+    HIGH_AFFINITY = "defense"
+    LOW_AFFINITY = "agility"
+    ID = "Duenum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Facesum(Weapon):
+    ILVL1_POWER = 50
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "vitality"
+    ID = "Facesum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Glaisum(Weapon):
+    ILVL1_POWER = 52
+    HIGH_AFFINITY = "defense"
+    LOW_AFFINITY = "agility"
+    ID = "Glaisum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Jarum(Weapon):
+    ILVL1_POWER = 36
+    HIGH_AFFINITY = "defense"
+    LOW_AFFINITY = "luck"
+    ID = "Jarum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Lithum(Weapon):
+    ILVL1_POWER = 45
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "agility"
+    ID = "Lithum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Maellum(Weapon):
+    ILVL1_POWER = 45
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = None
+    ID = "Maellum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Medalum(Weapon):
+    ILVL1_POWER = 41
+    HIGH_AFFINITY = "defense"
+    LOW_AFFINITY = "agility"
+    ID = "Medalum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Melarum(Weapon):
+    ILVL1_POWER = 50
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = "luck"
+    ID = "Melarum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Plenum(Weapon):
+    ILVL1_POWER = 43
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "defense"
+    ID = "Plenum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Seashelum(Weapon):
+    ILVL1_POWER = 42
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "defense"
+    ID = "Seashelum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Sekarum(Weapon):
+    ILVL1_POWER = 48
+    HIGH_AFFINITY = "vitality"
+    LOW_AFFINITY = "agility"
+    ID = "Sekarum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Stalum(Weapon):
+    ILVL1_POWER = 45
+    HIGH_AFFINITY = "defense"
+    LOW_AFFINITY = "luck"
+    ID = "Stalum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Tissenum(Weapon):
+    ILVL1_POWER = 54
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "vitality"
+    ID = "Tissenum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Veremum(Weapon):
+    ILVL1_POWER = 46
+    HIGH_AFFINITY = "luck"
+    LOW_AFFINITY = "vitality"
+    ID = "Veremum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Volesterum(Weapon):
+    ILVL1_POWER = 46
+    HIGH_AFFINITY = "agility"
+    LOW_AFFINITY = "vitality"
+    ID = "Volesterum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
+
+class Yeverum(Weapon):
+    ILVL1_POWER = 7
+    HIGH_AFFINITY = "defense"
+    LOW_AFFINITY = "agility"
+    ID = "Yeverum"
+    def __init__(self, character):
+        super().__init__(attributes=(self.LOW_AFFINITY, self.HIGH_AFFINITY), ilvl1_power=self.ILVL1_POWER, name = self.ID, owner= character) 
 
 #endregion
