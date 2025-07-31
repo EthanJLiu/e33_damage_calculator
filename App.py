@@ -184,7 +184,7 @@ class Select_Screen(tk.Frame):
         self.stats.pack(in_=frame, anchor = "center", padx = (0, self.wpn_select.winfo_width()))
 
     def __init__(self, custom, parent, character):
-        super().__init__(custom, width = 100, bg= "red")
+        super().__init__(custom, width = 100)
         self.wpn_select = ctk.CTkScrollableFrame(self)
         self.skill_select = ctk.CTkScrollableFrame(self)
         self.buff_select = ctk.CTkScrollableFrame(self)
@@ -260,7 +260,7 @@ class Stat_Screen(tk.Frame):
         self.total_skill_dmg_label.config(text = f"Total Dmg(conditions met): {math.trunc(self.new_total_skill_dmg)}" )
     
     def __init__(self, frame, item, skill):
-        super().__init__(bg='red')
+        super().__init__()
         
         self.item = item
         self.ilvl = item.level
@@ -295,9 +295,10 @@ class Stat_Screen(tk.Frame):
         self.total_skill_dmg_label = tk.Label(self, text = f"Total Dmg(conditions met): {math.trunc(self.total_skill_dmg)}" )
 
         #packing
+        self.down_btn.pack(side = tk.LEFT, anchor="nw", pady = 40)
+        self.up_btn.pack(side =tk.RIGHT, anchor = "ne", pady = 40)
         self.divider = tk.Label(self, text = "")
-        self.down_btn.pack(side = tk.LEFT)
-        self.up_btn.pack(side =tk.RIGHT)
+
         self.name_label.pack(pady = (0, 25))
 
         self.lvl_label.pack()
