@@ -5,7 +5,7 @@ import customtkinter as ctk
 import player_character as pc
 import weapon as wpn
 import re
-import skills_and_pictos as sp
+import skills as sp
 import math
 
 Lune = pc.Lune()
@@ -86,14 +86,25 @@ MAELLE_WEAPONS = [wpn.Barrier_Breaker, wpn.Battlum, wpn.Brulerum, wpn.Chalium,
                  wpn.Veremum, wpn.Volesterum, wpn.Yeverum]
 MAELLE_SKILLS = parse_skills_from_txt("skill_txt_files/maelle_skills.txt")
 
-
-
 NAME_TO_ITEMS = {"Verso" : VERSO_AND_GUSTAVE_WEAPONS, "Lune" : LUNE_WEAPONS, "Monoco" : MONOCO_WEAPONS, "Sciel": SCIEL_WEAPONS, "Maelle": MAELLE_WEAPONS, "Gustave" : VERSO_AND_GUSTAVE_WEAPONS}
 NAME_TO_SKILLS = {"Verso" : VERSO_SKILLS, "Lune" : LUNE_SKILLS, "Monoco" : MONOCO_SKILLS, "Sciel": SCIEL_SKILLS, "Maelle": MAELLE_SKILLS, "Gustave" : GUSTAVE_SKILLS}
 
-active_char = None
+PICTOS_AND_BUFFS = {"At Death's Door" : ("MULTI", 1.5), "First Offense" : ("MULTI", 1.5), "Full Strength": ("MULTI", 1.25),
+                    "Glass Canon" : ("MULTI", 1.25), "Roulette":("MULTI", 2.0), "Solo Fighter" : ("MULTI", 1.5), 
+                    "Teamwork" : ("MULTI", 1.1), "Greater Defenseless":("MULTI", 1.40), "Greater Powerful" : ("MULTI", 1.4),
+                    "Burn Affinity" : ("ADD", 0.25), "Confident Fighter" : ("ADD", 0.3), "Empowering Dodge(10 Stacks)" : ("ADD", 0,5), 
+                    "Empowering Parry(10 Stacks)" : ("ADD", 0.5), "Exhausting Power": ("ADD", 0.5), "Gradient Fighter" : ("ADD", 0.25), 
+                    "Immaculate" : ("ADD", 0.3), "Inverted Affinity" : ("ADD", 0.5), "Powered Attack" : ("ADD", 0.2), 
+                    "Powerful Shield(9 stacks)" : ("ADD", 0.9), "Shield Affinity": ("ADD", 0.3), "Stun Boost" : ("ADD", 0.3), 
+                    "Tainted(1 Stack)" : ("ADD", 0.15), "Warming Up(5 Stacks)" : ("ADD", 0.25)}
+#NOTE Gradient fighter improperly applies to non gradient atks
+#NOTE In game, it is not possible to have 5 stacks of Warming Up while having Inverted Affinity
+#NOTE At Death's Door and Full Strength can be both selected even though it is not possible to have both buffs
+
+
 active_item = None
 active_skill = None
+active_char = None
 class CharacterSelection(tk.Frame):
     def move_to_character_screen(self, prev, character_name, frame_to_remove):
         customization_frame = Customization_Screen(self.parent, prev, character_name)
@@ -104,7 +115,8 @@ class CharacterSelection(tk.Frame):
         super().__init__(parent)
         self.parent = parent
         tk.Label(self, text = "Select Character:").pack()
-        
+
+        #Create character buttons
         for index, char in enumerate(CHARACTERS):
             img = Image.open(char["image"]).resize((75,75))
             img = ImageTk.PhotoImage(img)
@@ -123,23 +135,31 @@ class Customization_Screen(tk.Frame):
                 frame.pack_forget()
         self.prev_frame.pack()
         self.parent.title("Character Select")
+        global active_char, active_item, active_skill
+        active_skill = None
+        active_char = None 
+        active_item = None
         self.parent.update_idletasks()
 
+    #Create the frame where stats and selections will go
     def __init__(self, parent, prev_frame, character_name):
         super().__init__(parent)
         self.parent = parent
         self.prev_frame = prev_frame
+
         global active_char
         active_char = NAME_TO_OBJECT[character_name]
         label = tk.Label(self, text = active_char.get_name()).pack()
-        
         back_btn = tk.Button(self, text = "Back", command = self.return_to_char_select)
         back_btn.pack(side = "top", anchor = "nw")
         
-        wpn_select = Select(self, self.parent, active_char)
-        wpn_select.pack(side = "left")
+        selection_screen = Select_Screen(self, self.parent, active_char)
+        selection_screen.pack(side = "left")
 
-class Select(tk.Frame):
+class Select_Screen(tk.Frame):
+    multiplicative_bonus = 1
+    cumulative_bonus = 1
+
     def display_stats(self, frame, item = None, skill = None):
         #set active item and skill
         global active_item
@@ -157,6 +177,7 @@ class Select(tk.Frame):
             default_skill = character_skills[0]
             active_skill = default_skill
 
+        #replace the window with updated stats
         if hasattr(self, 'stats') and self.stats.winfo_exists():
             self.stats.destroy()
         self.stats = Stat_Screen(frame, active_item, active_skill)
@@ -166,6 +187,7 @@ class Select(tk.Frame):
         super().__init__(custom, width = 100, bg= "red")
         self.wpn_select = ctk.CTkScrollableFrame(self)
         self.skill_select = ctk.CTkScrollableFrame(self)
+        self.buff_select = ctk.CTkScrollableFrame(self)
 
         self.parent = parent
         self.character = character
@@ -185,9 +207,33 @@ class Select(tk.Frame):
         for ability in self.skill_set:
             btn = tk.Button(self.skill_select, text = ability, command = lambda skill = self.skill_set[ability], frame = custom: self.display_stats(frame, active_item, skill))
             btn.pack()
+        self.skill_select.pack(side = "top")
+
+        #picto and buff select
+        def calc_buff_multipliers(is_checked, buff = (None, None)):
+            bonus = buff
+            if bonus == (None, None):
+                return
+            if is_checked.get():
+                if bonus[0] == "MULTI":
+                    Select_Screen.multiplicative_bonus *= bonus[1]
+                else:
+                    Select_Screen.cumulative_bonus += bonus[1]
+            else:
+                if bonus[0] == "MULTI":
+                    Select_Screen.multiplicative_bonus /= bonus[1]
+                else:
+                    Select_Screen.cumulative_bonus -= bonus[1]
+            self.display_stats(custom, active_item, active_skill)
+        
+        for bonus in PICTOS_AND_BUFFS:
+            is_checked = BooleanVar()
+            check_box = tk.Checkbutton(self.buff_select, text = bonus, variable = is_checked, command = lambda buff = PICTOS_AND_BUFFS[bonus], status = is_checked: calc_buff_multipliers(status, buff))
+            check_box.pack()
+        self.buff_select.pack()
 
         parent.title("Character Customization")
-        self.skill_select.pack(side = "top")
+        
 
 class Stat_Screen(tk.Frame):
     def change_lvl(self, direction):
@@ -195,22 +241,22 @@ class Stat_Screen(tk.Frame):
         self.ilvl = self.item.level
 
         self.new_base_atk = self.item.atk_levels[self.ilvl-1]
-        self.new_final_atk = self.item.final_dmg
+        self.new_final_atk = self.item.final_dmg 
 
         self.lvl_label.config(text = f"Level: {self.ilvl}")
         self.atk_label.config(text = f"Base Attack Power: {self.new_base_atk}")
         self.final_atk_label.config(text = f"Final Base Attack Power: {self.new_final_atk}")
 
-        self.new_single_base_hit_skill = self.new_final_atk * active_skill.get_single_hit_base_multi()
+        self.new_single_base_hit_skill = self.new_final_atk * active_skill.get_single_hit_base_multi() * Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
         self.single_base_hit_skill_label.config(text = f"Single Hit Skill Dmg(no conditions met): {math.trunc(self.new_single_base_hit_skill)}" )
 
-        self.new_single_final_hit_skill = self.new_final_atk  * active_skill.get_single_hit_final_multi()
+        self.new_single_final_hit_skill = self.new_final_atk  * active_skill.get_single_hit_final_multi() * Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
         self.single_final_hit_skill_label.config(text = f"Single Hit Skill Dmg(conditions met): {math.trunc(self.new_single_final_hit_skill)}" )
 
-        self.new_total_base_skill_dmg = self.new_final_atk  * active_skill.get_total_base_multi()
+        self.new_total_base_skill_dmg = self.new_final_atk  * active_skill.get_total_base_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
         self.total_base_skill_dmg_label.config(text = f"Total Dmg(no conditions met): {math.trunc(self.new_total_base_skill_dmg)}" )
 
-        self.new_total_skill_dmg = self.new_final_atk  * active_skill.get_total_final_multi()
+        self.new_total_skill_dmg = self.new_final_atk  * active_skill.get_total_final_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
         self.total_skill_dmg_label.config(text = f"Total Dmg(conditions met): {math.trunc(self.new_total_skill_dmg)}" )
     
     def __init__(self, frame, item, skill):
@@ -234,21 +280,22 @@ class Stat_Screen(tk.Frame):
         self.up_btn = tk.Button(self, text = "-->", command = lambda: self.change_lvl("UP"))
         
         #expected skill damage
-        self.skill_name_label = tk.Label(self, text = skill.get_name())
+        self.skill_name_label = tk.Label(self, text = skill.get_name(), font = ("Arial", 14, "underline"))
 
-        self.single_base_hit_skill = self.final_atk_power * skill.get_single_hit_base_multi()
+        self.single_base_hit_skill = self.final_atk_power * skill.get_single_hit_base_multi() * Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
         self.single_base_hit_skill_label = tk.Label(self, text = f"Single Hit Skill Dmg(no conditions met): {math.trunc(self.single_base_hit_skill)}" )
 
-        self.single_final_hit_skill = self.final_atk_power * skill.get_single_hit_final_multi()
+        self.single_final_hit_skill = self.final_atk_power * skill.get_single_hit_final_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
         self.single_final_hit_skill_label = tk.Label(self, text = f"Single Hit Skill Dmg(conditions met): {math.trunc(self.single_final_hit_skill)}" )
 
-        self.total_base_skill_dmg = self.final_atk_power * skill.get_total_base_multi()
+        self.total_base_skill_dmg = self.final_atk_power * skill.get_total_base_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
         self.total_base_skill_dmg_label = tk.Label(self, text = f"Total Dmg(no conditions met): {math.trunc(self.total_base_skill_dmg)}" )
 
-        self.total_skill_dmg = self.final_atk_power * skill.get_total_final_multi()
+        self.total_skill_dmg = self.final_atk_power * skill.get_total_final_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
         self.total_skill_dmg_label = tk.Label(self, text = f"Total Dmg(conditions met): {math.trunc(self.total_skill_dmg)}" )
 
         #packing
+        self.divider = tk.Label(self, text = "")
         self.down_btn.pack(side = tk.LEFT)
         self.up_btn.pack(side =tk.RIGHT)
         self.name_label.pack(pady = (0, 25))
@@ -256,6 +303,7 @@ class Stat_Screen(tk.Frame):
         self.lvl_label.pack()
         self.atk_label.pack()
         self.final_atk_label.pack()
+        self.divider.pack()
 
         self.skill_name_label.pack()
         self.single_base_hit_skill_label.pack()

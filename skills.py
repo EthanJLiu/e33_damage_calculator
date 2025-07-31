@@ -25,7 +25,3 @@ class Skill():
     def __str__(self):
         return f"base: {self.base_scaling}, conditional: {self.conditional_scaling}, hit: {self.hit_count}, name: {self.name}"
 
-class Picto():
-    def __init__(self, type, multi):
-        self.type = type
-        self.multi = multi
