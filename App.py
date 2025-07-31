@@ -91,16 +91,16 @@ NAME_TO_SKILLS = {"Verso" : VERSO_SKILLS, "Lune" : LUNE_SKILLS, "Monoco" : MONOC
 
 PICTOS_AND_BUFFS = {"At Death's Door" : ("MULTI", 1.5), "First Offense" : ("MULTI", 1.5), "Full Strength": ("MULTI", 1.25),
                     "Glass Canon" : ("MULTI", 1.25), "Roulette":("MULTI", 2.0), "Solo Fighter" : ("MULTI", 1.5), 
-                    "Teamwork" : ("MULTI", 1.1), "Greater Defenseless":("MULTI", 1.40), "Greater Powerful" : ("MULTI", 1.4),
+                    "Teamwork" : ("MULTI", 1.21), "Greater Defenseless":("MULTI", 1.40), "Greater Powerful" : ("MULTI", 1.4),
+                    "Dead Energy II" : ("MULTI", 1.1), "First Strike" : ("MULTI", 1.1), "Sweet Kill" : ("MULTI", 1.1),
                     "Burn Affinity" : ("ADD", 0.25), "Confident Fighter" : ("ADD", 0.3), "Empowering Dodge(10 Stacks)" : ("ADD", 0,5), 
                     "Empowering Parry(10 Stacks)" : ("ADD", 0.5), "Exhausting Power": ("ADD", 0.5), "Gradient Fighter" : ("ADD", 0.25), 
                     "Immaculate" : ("ADD", 0.3), "Inverted Affinity" : ("ADD", 0.5), "Powered Attack" : ("ADD", 0.2), 
                     "Powerful Shield(9 stacks)" : ("ADD", 0.9), "Shield Affinity": ("ADD", 0.3), "Stun Boost" : ("ADD", 0.3), 
-                    "Tainted(1 Stack)" : ("ADD", 0.15), "Warming Up(5 Stacks)" : ("ADD", 0.25)}
-#NOTE Gradient fighter improperly applies to non gradient atks
-#NOTE In game, it is not possible to have 5 stacks of Warming Up while having Inverted Affinity
-#NOTE At Death's Door and Full Strength can be both selected even though it is not possible to have both buffs
+                    "Tainted(1 Stack)" : ("ADD", 0.15), "Warming Up(5 Stacks)" : ("ADD", 0.25), "Sireso" : ("MULTI", 1.5), "Virtuose Stance":("MULTI", 3),
+                    "S Rank" : ("MULTI", 3), "Fortune's Fury" : ("MULTI", 2), "Twighlight Stance(1 Sun, 1 Moon)" : ("MULTI", 1.5)}
 
+CRIT_MULTI = 1.5
 
 active_item = None
 active_skill = None
@@ -139,6 +139,8 @@ class Customization_Screen(tk.Frame):
         active_skill = None
         active_char = None 
         active_item = None
+        Select_Screen.multiplicative_bonus = 1
+        Select_Screen.cumulative_bonus = 1
         self.parent.update_idletasks()
 
     #Create the frame where stats and selections will go
@@ -247,16 +249,16 @@ class Stat_Screen(tk.Frame):
         self.atk_label.config(text = f"Base Attack Power: {self.new_base_atk}")
         self.final_atk_label.config(text = f"Final Base Attack Power: {self.new_final_atk}")
 
-        self.new_single_base_hit_skill = self.new_final_atk * active_skill.get_single_hit_base_multi() * Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
+        self.new_single_base_hit_skill = self.new_final_atk * active_skill.get_single_hit_base_multi() * Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus * CRIT_MULTI
         self.single_base_hit_skill_label.config(text = f"Single Hit Skill Dmg(no conditions met): {math.trunc(self.new_single_base_hit_skill)}" )
 
-        self.new_single_final_hit_skill = self.new_final_atk  * active_skill.get_single_hit_final_multi() * Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
+        self.new_single_final_hit_skill = self.new_final_atk  * active_skill.get_single_hit_final_multi() * Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus * CRIT_MULTI
         self.single_final_hit_skill_label.config(text = f"Single Hit Skill Dmg(conditions met): {math.trunc(self.new_single_final_hit_skill)}" )
 
-        self.new_total_base_skill_dmg = self.new_final_atk  * active_skill.get_total_base_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
+        self.new_total_base_skill_dmg = self.new_final_atk  * active_skill.get_total_base_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus * CRIT_MULTI
         self.total_base_skill_dmg_label.config(text = f"Total Dmg(no conditions met): {math.trunc(self.new_total_base_skill_dmg)}" )
 
-        self.new_total_skill_dmg = self.new_final_atk  * active_skill.get_total_final_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
+        self.new_total_skill_dmg = self.new_final_atk  * active_skill.get_total_final_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus * CRIT_MULTI
         self.total_skill_dmg_label.config(text = f"Total Dmg(conditions met): {math.trunc(self.new_total_skill_dmg)}" )
     
     def __init__(self, frame, item, skill):
@@ -282,16 +284,16 @@ class Stat_Screen(tk.Frame):
         #expected skill damage
         self.skill_name_label = tk.Label(self, text = skill.get_name(), font = ("Arial", 14, "underline"))
 
-        self.single_base_hit_skill = self.final_atk_power * skill.get_single_hit_base_multi() * Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
+        self.single_base_hit_skill = self.final_atk_power * skill.get_single_hit_base_multi() * Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus * CRIT_MULTI
         self.single_base_hit_skill_label = tk.Label(self, text = f"Single Hit Skill Dmg(no conditions met): {math.trunc(self.single_base_hit_skill)}" )
 
-        self.single_final_hit_skill = self.final_atk_power * skill.get_single_hit_final_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
+        self.single_final_hit_skill = self.final_atk_power * skill.get_single_hit_final_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus * CRIT_MULTI
         self.single_final_hit_skill_label = tk.Label(self, text = f"Single Hit Skill Dmg(conditions met): {math.trunc(self.single_final_hit_skill)}" )
 
-        self.total_base_skill_dmg = self.final_atk_power * skill.get_total_base_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
+        self.total_base_skill_dmg = self.final_atk_power * skill.get_total_base_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus * CRIT_MULTI
         self.total_base_skill_dmg_label = tk.Label(self, text = f"Total Dmg(no conditions met): {math.trunc(self.total_base_skill_dmg)}" )
 
-        self.total_skill_dmg = self.final_atk_power * skill.get_total_final_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus
+        self.total_skill_dmg = self.final_atk_power * skill.get_total_final_multi()* Select_Screen.multiplicative_bonus * Select_Screen.cumulative_bonus * CRIT_MULTI
         self.total_skill_dmg_label = tk.Label(self, text = f"Total Dmg(conditions met): {math.trunc(self.total_skill_dmg)}" )
 
         #packing
